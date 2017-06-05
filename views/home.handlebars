@@ -1,0 +1,17 @@
+<h2> Enter the product name! </h2>
+<form class="form-horizontal" role="form"
+	action ="/process?form=search" method="POST">
+	<input type="hidden" name="_csrf" value="{{csrf}}">
+	<div class="form-group">
+		<label for="prodName" class="col-sm-2 control-label">Product Name</label>
+		<div class="col-sm-4">
+			<input type="text" class="form-control"
+			id="prodName" name="name">
+		</div>
+	</div>
+	<div class="form-group">
+		<div class="col-sm-offset-2 col-sm-4">
+			<button type="submit" class="btn btn-default">Search</button>
+		</div>
+	</div>
+</form>
