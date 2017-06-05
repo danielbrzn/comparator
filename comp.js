@@ -48,7 +48,7 @@ app.post('/process', function(req, res){
 app.get('/results', function(req, res){
 	searchController.getPrice(req.app.locals.prodName, function(results) {
 		res.render('results', { name: results[0].ItemAttributes[0].Title[0] , 
-			price: results[0].ItemAttributes[0].ListPrice[0].FormattedPrice[0]});
+			price: results[0].OfferSummary[0].LowestNewPrice[0].FormattedPrice[0]});
 	});
 });
 
