@@ -6,7 +6,8 @@
     "express": "^4.15.3",
     "express-handlebars": "^3.0.0",
     "google": "^2.1.0",
-    "request": "^2.81.0"
+    "request": "^2.81.0",
+    "tablesort": "^5.0.1"
   },
   "description": "just cause",
   "repository": {
