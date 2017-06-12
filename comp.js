@@ -1,8 +1,7 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var searchController = require('./lib/searchController.js');
-var lazadaScraper = require('./lib/lazadaScraper.js');
-
+var lazScrape = require('./lib/newLazScrape.js');
 var app = express();
 
 // set up handlebars view engine
@@ -37,25 +36,54 @@ app.post('/process', function(req, res){
 });
 
 app.get('/results', function(req, res){
-	var priceArr = [];
-	var webArray = ["Lazada SG", "Amazon"]
-		/*
-		googleLink.getLink(req.app.locals.prodName, "Lazada SG", function(prodLink) {
-			// lazaderinos
-				lazadaScraper.getData(prodLink, function(arr) {
-					priceArr.push(arr[0]);
-					priceArr.push(arr[1]);
-					
-				});
+		
+		searchController.getInfo(req.app.locals.prodName).then(function (fulfilled) {
+			console.log(fulfilled);
+		})
+		.catch(function (error) {
+			console.log(error.message);
 		});
+		
+		
+	
+		
+		/*
+		var priceArr = [];
+
+		var amz = false;
+		var fetchAMZ = new Promise(function(resolve, reject) {
+			searchController.getURL(req.app.locals.prodName, function(prodLink) {
+				searchController.getInfo(prodLink, function(results) {
+					priceArr.push(results);
+					amz = true;
+				});
+			});
+	
+			if (amz)
+				resolve(priceArr);
+			else
+				reject('Failure!');
+		});
+
+		fetchAMZ.then(function(fulfilled) {
+			console.log(priceArr[0].name);
+			console.log(priceArr[0].price);
+		}).catch(function(error) {
+			console.error("failed to fetch from Amazon");
+		});
+		
+		
 		*/
-		searchController.getURL(req.app.locals.prodName, function(prodLink) {
-			searchController.getInfo(prodLink, function(results) {
+		/*searchController.getURL(req.app.locals.prodName)
+		.then(searchController.getInfo(prodLink, function(results) {
 			priceArr.push(results);
 			res.render('results', {AmazName: priceArr[0].name, AmazPrice: priceArr[0].price,
 							LazName: priceArr[0], LazPrice: priceArr[1]});
-			});
+		})
+		).catch(function(err) {
+			console.log(err);
 		});
+		*/
 	
 });
 
@@ -77,3 +105,6 @@ app.listen(app.get('port'), function(){
 		app.get('port') + '; press Ctrl-C to terminate.' );
 
 });
+
+
+	
