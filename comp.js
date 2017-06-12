@@ -1,7 +1,7 @@
 var express = require('express');
-var fortune = require('./lib/fortune.js');
 var bodyParser = require('body-parser');
 var searchController = require('./lib/searchController.js');
+var lazadaScraper = require('./lib/lazadaScraper.js');
 
 var app = express();
 
@@ -19,15 +19,6 @@ app.get('/', function(req, res){
 	res.render('home');
 });
 
-app.get('/about', function(req,res){
-	res.render('about', { fortune: searchController.getPrice('gtx 1080') });
-});
-
-app.use(function(req, res, next){
-		res.locals.showTests = app.get('env') !== 'production' &&
-				req.query.test === '1';
-		next();
-});
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
@@ -46,10 +37,26 @@ app.post('/process', function(req, res){
 });
 
 app.get('/results', function(req, res){
-	searchController.getPrice(req.app.locals.prodName, function(results) {
-		res.render('results', { name: results[0].ItemAttributes[0].Title[0] , 
-			price: results[0].OfferSummary[0].LowestNewPrice[0].FormattedPrice[0]});
-	});
+	var priceArr = [];
+	var webArray = ["Lazada SG", "Amazon"]
+		/*
+		googleLink.getLink(req.app.locals.prodName, "Lazada SG", function(prodLink) {
+			// lazaderinos
+				lazadaScraper.getData(prodLink, function(arr) {
+					priceArr.push(arr[0]);
+					priceArr.push(arr[1]);
+					
+				});
+		});
+		*/
+		searchController.getURL(req.app.locals.prodName, function(prodLink) {
+			searchController.getInfo(prodLink, function(results) {
+			priceArr.push(results);
+			res.render('results', {AmazName: priceArr[0].name, AmazPrice: priceArr[0].price,
+							LazName: priceArr[0], LazPrice: priceArr[1]});
+			});
+		});
+	
 });
 
 // 404 catch-all handler (middleware)
@@ -69,38 +76,4 @@ app.listen(app.get('port'), function(){
 	console.log('Express started on http://localhost:' +
 		app.get('port') + '; press Ctrl-C to terminate.' );
 
-});
-
-function getWeatherData(){
-	return {
-		locations: [
-			{
-				name: 'Portland',
-				forecastUrl: 'http://www.wunderground.com/US/OR/Portland.html',
-				iconUrl: 'http://icons-ak.wxug.com/i/c/k/cloudy.gif',
-				weather: 'Overcast',
-				temp: '54.1 F (12.3 C)',
-			},
-			{
-				name: 'Bend',
-				forecastUrl: 'http://www.wunderground.com/US/OR/Bend.html',
-				iconUrl: 'http://icons-ak.wxug.com/i/c/k/partlycloudy.gif',
-				weather: 'Partly Cloudy',
-				temp: '55.0 F (12.8 C)',
-			},
-			{
-				name: 'Manzanita',
-				forecastUrl: 'http://www.wunderground.com/US/OR/Manzanita.html',
-				iconUrl: 'http://icons-ak.wxug.com/i/c/k/rain.gif',
-				weather: 'Light Rain',
-				temp: '55.0 F (12.8 C)',
-			},
-		],
-	};
-}
-
-app.use(function(req, res, next){
-		if(!res.locals.partials) res.locals.partials = {};
-		res.locals.partials.weather = getWeatherData();
-		next();
 });
