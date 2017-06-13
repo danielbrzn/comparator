@@ -1,7 +1,7 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var searchController = require('./lib/searchController.js');
-var lazScrape = require('./lib/newLazScrape.js');
+var lazScrape = require('./lib/lazScrape.js');
 var app = express();
 
 // set up handlebars view engine
@@ -36,55 +36,30 @@ app.post('/process', function(req, res){
 });
 
 app.get('/results', function(req, res){
-		
-		searchController.getInfo(req.app.locals.prodName).then(function (fulfilled) {
-			console.log(fulfilled);
+	var arr = [[],[]]
+		/*
+		searchController.getInfo(req.app.locals.prodName).then(function (amzDone) {
+			console.log(amzDone);
 		})
 		.catch(function (error) {
 			console.log(error.message);
-		});
-		
-		
-	
-		
-		/*
-		var priceArr = [];
-
-		var amz = false;
-		var fetchAMZ = new Promise(function(resolve, reject) {
-			searchController.getURL(req.app.locals.prodName, function(prodLink) {
-				searchController.getInfo(prodLink, function(results) {
-					priceArr.push(results);
-					amz = true;
-				});
-			});
-	
-			if (amz)
-				resolve(priceArr);
-			else
-				reject('Failure!');
-		});
-
-		fetchAMZ.then(function(fulfilled) {
-			console.log(priceArr[0].name);
-			console.log(priceArr[0].price);
-		}).catch(function(error) {
-			console.error("failed to fetch from Amazon");
-		});
-		
-		
-		*/
-		/*searchController.getURL(req.app.locals.prodName)
-		.then(searchController.getInfo(prodLink, function(results) {
-			priceArr.push(results);
-			res.render('results', {AmazName: priceArr[0].name, AmazPrice: priceArr[0].price,
-							LazName: priceArr[0], LazPrice: priceArr[1]});
 		})
-		).catch(function(err) {
-			console.log(err);
+		.then(lazScrape.getInfo(req.app.locals.prodName).then(function (lazDone) {
+			console.log(lazDone);
+		})).catch(function (error) {
+			console.log(error.message);
 		});
 		*/
-	
+		
+		Promise.all([searchController.getInfo(req.app.locals.prodName), lazScrape.getInfo(req.app.locals.prodName)])
+		.then(results => {
+			arr[0] = results[0];
+			arr[1] = results[1];
+			res.render( 'results', { AmazName: arr[0][0], AmazPrice: arr[0][1],
+										LazName: arr[1][0], LazPrice: arr[1][1]
+			});
+		});
+			
 });
 
 // 404 catch-all handler (middleware)
