@@ -1,8 +1,7 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var searchController = require('./lib/searchController.js');
-var lazadaScraper = require('./lib/lazadaScraper.js');
-
+var lazScrape = require('./lib/lazScrape.js');
 var app = express();
 
 // set up handlebars view engine
@@ -37,26 +36,30 @@ app.post('/process', function(req, res){
 });
 
 app.get('/results', function(req, res){
-	var priceArr = [];
-	var webArray = ["Lazada SG", "Amazon"]
+	var arr = [[],[]]
 		/*
-		googleLink.getLink(req.app.locals.prodName, "Lazada SG", function(prodLink) {
-			// lazaderinos
-				lazadaScraper.getData(prodLink, function(arr) {
-					priceArr.push(arr[0]);
-					priceArr.push(arr[1]);
-					
-				});
+		searchController.getInfo(req.app.locals.prodName).then(function (amzDone) {
+			console.log(amzDone);
+		})
+		.catch(function (error) {
+			console.log(error.message);
+		})
+		.then(lazScrape.getInfo(req.app.locals.prodName).then(function (lazDone) {
+			console.log(lazDone);
+		})).catch(function (error) {
+			console.log(error.message);
 		});
 		*/
-		searchController.getURL(req.app.locals.prodName, function(prodLink) {
-			searchController.getInfo(prodLink, function(results) {
-			priceArr.push(results);
-			res.render('results', {AmazName: priceArr[0].name, AmazPrice: priceArr[0].price,
-							LazName: priceArr[0], LazPrice: priceArr[1]});
+		
+		Promise.all([searchController.getInfo(req.app.locals.prodName), lazScrape.getInfo(req.app.locals.prodName)])
+		.then(results => {
+			arr[0] = results[0];
+			arr[1] = results[1];
+			res.render( 'results', { AmazName: arr[0][0], AmazPrice: arr[0][1],
+										LazName: arr[1][0], LazPrice: arr[1][1]
 			});
 		});
-	
+			
 });
 
 // 404 catch-all handler (middleware)
@@ -77,3 +80,6 @@ app.listen(app.get('port'), function(){
 		app.get('port') + '; press Ctrl-C to terminate.' );
 
 });
+
+
+	
