@@ -3,6 +3,7 @@ var bodyParser = require('body-parser');
 var searchController = require('./lib/searchController.js');
 var lazScrape = require('./lib/lazScrape.js');
 var app = express();
+var tablesort = require('tablesort');
 
 // set up handlebars view engine
 var handlebars = require('express3-handlebars')
@@ -53,6 +54,7 @@ app.get('/results', function(req, res){
 		
 		Promise.all([searchController.getInfo(req.app.locals.prodName), lazScrape.getInfo(req.app.locals.prodName)])
 		.then(results => {
+			console.log(results)
 			arr[0] = results[0];
 			arr[1] = results[1];
 			res.render( 'results', { AmazName: arr[0][0], AmazPrice: arr[0][1],
