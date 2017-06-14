@@ -2,6 +2,8 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var searchController = require('./lib/searchController.js');
 var lazScrape = require('./lib/lazScrape.js');
+var sephScrape = require('./lib/sephScrape.js')
+var currConv = require('./lib/currencyconverter.js');
 var app = express();
 
 // set up handlebars view engine
@@ -51,13 +53,23 @@ app.get('/results', function(req, res){
 		});
 		*/
 		
-		Promise.all([searchController.getInfo(req.app.locals.prodName), lazScrape.getInfo(req.app.locals.prodName)])
+		Promise.all([searchController.getInfo(req.app.locals.prodName), lazScrape.getInfo(req.app.locals.prodName), sephScrape.getInfo(req.app.locals.prodName)])
 		.then(results => {
 			arr[0] = results[0];
 			arr[1] = results[1];
-			res.render( 'results', { AmazName: arr[0][0], AmazPrice: arr[0][1],
-										LazName: arr[1][0], LazPrice: arr[1][1]
-			});
+			arr[2] = results[2];
+			currConv.convert(arr[0][1])
+			.then(
+				function (results) {
+					arr[0][1] = results;
+				res.render( 'results', { AmazName: arr[0][0], AmazPrice: arr[0][1],
+										LazName: arr[1][0], LazPrice: arr[1][1],
+										SephName: arr[2][0], SephPrice: arr[2][1]
+				
+			
+					})
+				}
+			);
 		});
 			
 });
