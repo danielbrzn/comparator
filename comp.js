@@ -5,6 +5,7 @@ var lazScrape = require('./lib/lazScrape.js');
 var sephScrape = require('./lib/sephScrape.js')
 var currConv = require('./lib/currencyconverter.js');
 var app = express();
+var tablesort = require('tablesort');
 
 // set up handlebars view engine
 var handlebars = require('express3-handlebars')
@@ -55,6 +56,7 @@ app.get('/results', function(req, res){
 		
 		Promise.all([searchController.getInfo(req.app.locals.prodName), lazScrape.getInfo(req.app.locals.prodName), sephScrape.getInfo(req.app.locals.prodName)])
 		.then(results => {
+			console.log(results)
 			arr[0] = results[0];
 			arr[1] = results[1];
 			arr[2] = results[2];

@@ -1,13 +1,9 @@
-{{!<script src='tablesort.min.js'></script>
-<link href='./tablesort.css' rel='stylesheet'>
-
-<script src='tablesort.number.js'></script>
-<script src='tablesort.date.js'></script>
-
-<script>
-    new Tablesort(document.getElementById('table-id'));
-</script>}}
-
+<head>
+    <script src='tablesort.min.js'></script>
+    <link href='tablesort.css' rel='stylesheet'>
+    <script src='tablesort.number.min.js'></script>
+</head>
+<body>
 <h1>Results Page</h1>
 <p>Here is the cheapest option: </p>
 
@@ -16,11 +12,19 @@
 
 {{! Table for the prices and stuff?}}
 
-<table>
+<table id='sort' class='sort'>
+    <thead>
+        <tr>
+            <th>Website</th>
+            <th>Product Name</th>
+            <th>Price</th>
+        </tr>
+    </thead>
+    <tbody>
     <tr>
-        <th>Website</th>
-        <th>Product Name</th>
-        <th>Price</th>
+        <td>Lazada</td>
+        <td>{{LazName}}</td>
+        <td>{{LazPrice}}</td>
     </tr>
     <tr>
         <td>Amazon</td>
@@ -28,13 +32,14 @@
         <td>{{AmazPrice}}</td>
     </tr>
     <tr>
-        <td>Lazada</td>
-        <td>{{LazName}}</td>
-        <td>{{LazPrice}}</td>
-    </tr>
-    <tr>
         <td>Sephora</td>
         <td>{{SephName}}</td>
         <td>{{SephPrice}}</td>
     </tr>
+    </tbody>
 </table>
+
+<script>
+    new Tablesort(document.getElementById('sort'));
+<{{!}}/script>
+</body>
