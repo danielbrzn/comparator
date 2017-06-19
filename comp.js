@@ -9,7 +9,7 @@ var tablesort = require('tablesort');
 
 // set up handlebars view engine
 var handlebars = require('express3-handlebars')
-		.create({ defaultLayout:'main' });
+.create({ defaultLayout:'main' });
 app.engine('handlebars', handlebars.engine);
 app.set('view engine', 'handlebars');
 
@@ -40,7 +40,8 @@ app.post('/process', function(req, res){
 
 app.get('/results', function(req, res){
 	var arr = [[],[]]
-		/*
+	var bestPrice, bestName;
+	/*
 		searchController.getInfo(req.app.locals.prodName).then(function (amzDone) {
 			console.log(amzDone);
 		})
@@ -53,47 +54,61 @@ app.get('/results', function(req, res){
 			console.log(error.message);
 		});
 		*/
-		
-		Promise.all([searchController.getInfo(req.app.locals.prodName), lazScrape.getInfo(req.app.locals.prodName), sephScrape.getInfo(req.app.locals.prodName)])
-		.then(results => {
-			console.log(results)
-			arr[0] = results[0];
-			arr[1] = results[1];
-			arr[2] = results[2];
-			currConv.convert(arr[0][1])
-			.then(
-				function (results) {
-					arr[0][1] = results;
-				res.render( 'results', { AmazName: arr[0][0], AmazPrice: arr[0][1],
-										LazName: arr[1][0], LazPrice: arr[1][1],
-										SephName: arr[2][0], SephPrice: arr[2][1]
-				
+	
+	Promise.all([searchController.getInfo(req.app.locals.prodName), lazScrape.getInfo(req.app.locals.prodName), sephScrape.getInfo(req.app.locals.prodName)])
+	.then(results => {
+		console.log(results)
+		arr[0] = results[0];
+		arr[1] = results[1];
+		arr[2] = results[2];
+		currConv.convert(arr[0][1])
+		.then(
+		function (results) {
+			arr[0][1] = results;
+			bestPrice = arr[0][1];
+			bestName = arr[0][0];
+			console.log(bestName);
+			console.log(bestPrice);
 			
-					})
+			
+			for (i = 1; i < arr.length; i++) {
+				if (parseInt(bestPrice) > parseInt(arr[i][1]) && !arr[i][0].includes("Not Found")) {
+					bestPrice = arr[i][1];
+					bestName = arr[i][0];
 				}
-			);
+				
+				if (i+1 == arr.length) {
+					console.log("bestPrice " + bestPrice);
+					res.render( 'results', {
+BestName: bestName, BestPrice: bestPrice,
+AmazName: arr[0][0], AmazPrice: "$" + arr[0][1],
+LazName: arr[1][0], LazPrice: "$" + arr[1][1],
+SephName: arr[2][0], SephPrice: arr[2][1]
+					});
+					
+				}
+			}
 		});
-			
+		
+	});
 });
 
 // 404 catch-all handler (middleware)
 app.use(function(req, res){
-		res.status(404);
-		res.render('404');
+	res.status(404);
+	res.render('404');
 });
 
 // custom 500 page
 app.use(function(err, req, res, next){
-		console.error(err.stack);
-		res.status(500);
-		res.render('500');
+	console.error(err.stack);
+	res.status(500);
+	res.render('500');
 });
 
 app.listen(app.get('port'), function(){
 	console.log('Express started on http://localhost:' +
-		app.get('port') + '; press Ctrl-C to terminate.' );
+	app.get('port') + '; press Ctrl-C to terminate.' );
 
 });
 
-
-	

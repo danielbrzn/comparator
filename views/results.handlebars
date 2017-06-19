@@ -1,23 +1,25 @@
 <head>
     <script src='tablesort.min.js'></script>
-    <link href='tablesort.css' rel='stylesheet'>
+    <link href='tablesort.css' rel='stylesheet'></link>
     <script src='tablesort.number.min.js'></script>
 </head>
 <body>
 <h1>Results Page</h1>
 <p>Here is the cheapest option: </p>
 
-<h2>Product Name: {{AmazName}}</h2>
-<h3>Price: {{AmazPrice}}</h3>
+<h2>Product Name: {{BestName}}</h2>
+<h3>Price: {{BestPrice}}</h3>
 
 {{! Table for the prices and stuff?}}
 
 <table id='sort' class='sort'>
+	
     <thead>
         <tr>
+
             <th>Website</th>
             <th>Product Name</th>
-            <th>Price</th>
+            <th data-sort-default>Price</th>
         </tr>
     </thead>
     <tbody>
@@ -37,6 +39,7 @@
         <td>{{SephPrice}}</td>
     </tr>
     </tbody>
+	
 </table>
 
 <script>
