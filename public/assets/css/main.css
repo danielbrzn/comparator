@@ -1810,6 +1810,7 @@
 		text-align: center;
 		text-decoration: none;
 		white-space: nowrap;
+		margin: 0.5cm;
 	}
 
 		input[type="submit"]:hover,
@@ -2548,7 +2549,7 @@
 			font-size: 0.9em;
 			font-weight: 700;
 			padding: 0 0.75em 0.75em 0.75em;
-			text-align: left;
+			text-align: center;
 		}
 
 		table thead {
