@@ -25,6 +25,9 @@ app.get('/', function(req, res){
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
+app.get('/about', function(req, res){
+    res.render('about');
+});
 
 app.get('/search', function(req, res){
 	// dummy for csrf
