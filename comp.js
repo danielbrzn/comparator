@@ -35,8 +35,8 @@ app.get('/search', function(req, res){
 });
 
 app.post('/process', function(req, res){
-	console.log('Form (from querystring): ' + req.query.form);
-	console.log('Product Name (from visible form field): ' + req.body.name);
+	//console.log('Form (from querystring): ' + req.query.form);
+	//console.log('Product Name (from visible form field): ' + req.body.name);
 	app.locals.prodName = req.body.name;
 	res.redirect(303, '/results');
 });
@@ -44,23 +44,11 @@ app.post('/process', function(req, res){
 app.get('/results', function(req, res){
 	var arr = [[],[]]
 	var bestPrice, bestName;
-	/*
-		searchController.getInfo(req.app.locals.prodName).then(function (amzDone) {
-			console.log(amzDone);
-		})
-		.catch(function (error) {
-			console.log(error.message);
-		})
-		.then(lazScrape.getInfo(req.app.locals.prodName).then(function (lazDone) {
-			console.log(lazDone);
-		})).catch(function (error) {
-			console.log(error.message);
-		});
-		*/
+
 	
 	Promise.all([searchController.getInfo(req.app.locals.prodName), lazScrape.getInfo(req.app.locals.prodName), sephScrape.getInfo(req.app.locals.prodName)])
 	.then(results => {
-		console.log(results)
+		//console.log(results)
 		arr[0] = results[0];
 		arr[1] = results[1];
 		arr[2] = results[2];
@@ -70,23 +58,29 @@ app.get('/results', function(req, res){
 			arr[0][1] = results;
 			bestPrice = arr[0][1];
 			bestName = arr[0][0];
-			console.log(bestName);
-			console.log(bestPrice);
+			bestLink = arr[0][2];
+			//console.log(bestName);
+			//console.log(bestPrice);
 			
 			
 			for (i = 1; i < arr.length; i++) {
 				if (parseInt(bestPrice) > parseInt(arr[i][1]) && !arr[i][0].includes("Not Found")) {
 					bestPrice = arr[i][1];
 					bestName = arr[i][0];
+					bestLink = arr[i][2];
 				}
 				
 				if (i+1 == arr.length) {
 					console.log("bestPrice " + bestPrice);
 					res.render( 'results', {
-BestName: bestName, BestPrice: bestPrice,
-AmazName: arr[0][0], AmazPrice: "$" + arr[0][1],
-LazName: arr[1][0], LazPrice: "$" + arr[1][1],
-SephName: arr[2][0], SephPrice: arr[2][1]
+						BestLink: bestLink,
+						BestName: bestName, BestPrice: "$" + bestPrice,
+						AmazLink: arr[0][2],
+						AmazName: arr[0][0], AmazPrice: "$" + arr[0][1],
+						LazLink: arr[1][2],
+						LazName: arr[1][0], LazPrice: "$" + arr[1][1],
+						SephLink: arr[2][2],
+						SephName: arr[2][0], SephPrice: "$" + arr[2][1]
 					});
 					
 				}

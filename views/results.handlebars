@@ -7,7 +7,7 @@
 <h1>Results Page</h1>
 <p>Here is the cheapest option: </p>
 
-<h2>Product Name: {{BestName}}</h2>
+<h2>Product Name: <a href= {{BestLink}}> {{BestName}}</a></h2>
 <h3>Price: {{BestPrice}}</h3>
 
 {{! Table for the prices and stuff?}}
@@ -25,17 +25,17 @@
     <tbody>
     <tr>
         <td>Lazada</td>
-        <td>{{LazName}}</td>
+        <td><a href= {{LazLink}}>{{LazName}}</a></td>
         <td>{{LazPrice}}</td>
     </tr>
     <tr>
         <td>Amazon</td>
-        <td>{{AmazName}}</td>
+        <td><a href= {{AmazLink}}>{{AmazName}}</a></td>
         <td>{{AmazPrice}}</td>
     </tr>
     <tr>
         <td>Sephora</td>
-        <td>{{SephName}}</td>
+        <td><a href= {{SephLink}}>{{SephName}}</a></td>
         <td>{{SephPrice}}</td>
     </tr>
     </tbody>
