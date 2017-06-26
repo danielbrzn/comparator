@@ -3579,6 +3579,7 @@
 		#main .inner {
 			max-width: 60em;
 			margin: 0 auto;
+			text-align : center;
 		}
 
 			#main .inner header p {
@@ -4520,7 +4521,7 @@
 /* Footer */
 
 	#footer {
-		padding: 4em 0 2em 0;
+		padding: 3.85em 0 22em 0;
 		background: #1c1c1c;
 		text-align: center;
 	}
@@ -4548,6 +4549,4 @@
 
 		}
 		
-	col-sm-2 control-label {
-		padding: 100px;
-	}
+	

@@ -41,6 +41,10 @@ app.post('/process', function(req, res){
 	res.redirect(303, '/results');
 });
 
+app.get('/elements', function(req, res) {
+	res.render('elements');
+});
+
 app.get('/results', function(req, res){
 	var arr = [[],[]]
 	var bestPrice, bestName;
