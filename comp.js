@@ -74,13 +74,13 @@ app.get('/results', function(req, res){
 					console.log("bestPrice " + bestPrice);
 					res.render( 'results', {
 						BestLink: bestLink,
-						BestName: bestName, BestPrice: "$" + bestPrice,
+						BestName: bestName, BestPrice: "$" + parseFloat(bestPrice).toFixed(2),
 						AmazLink: arr[0][2],
-						AmazName: arr[0][0], AmazPrice: "$" + arr[0][1],
+						AmazName: arr[0][0], AmazPrice: "$" + parseFloat(arr[0][1]).toFixed(2),
 						LazLink: arr[1][2],
-						LazName: arr[1][0], LazPrice: "$" + arr[1][1],
+						LazName: arr[1][0], LazPrice: "$" + parseFloat(arr[1][1]).toFixed(2),
 						SephLink: arr[2][2],
-						SephName: arr[2][0], SephPrice: "$" + arr[2][1]
+						SephName: arr[2][0], SephPrice: "$" + parseFloat(arr[2][1]).toFixed(2)
 					});
 					
 				}
