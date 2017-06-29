@@ -46,7 +46,7 @@ app.post('/process', function(req, res){
 	//console.log('Form (from querystring): ' + req.query.form);
 	//console.log('Product Name (from visible form field): ' + req.body.name);
 	app.locals.prodName = req.body.name;
-	req.session.prodName = req.body.name;
+
 	res.redirect(303, '/results');
 });
 
@@ -65,9 +65,8 @@ app.get('/temp', function(req, res) {
 app.get('/results', function(req, res){
 	var arr = [[],[]]
 	var bestPrice, bestName;
-
-	
-	Promise.all([amzScrape.getInfo(req.app.locals.prodName), lazScrape.getInfo(req.app.locals.prodName), sephScrape.getInfo(req.app.locals.prodName)])
+	req.session.prodName = app.locals.prodName;
+	Promise.all([amzScrape.getInfo(req.session.prodName), lazScrape.getInfo(req.session.prodName), sephScrape.getInfo(req.session.prodName)])
 	.then(results => {
 		//console.log(results)
 		arr[0] = results[0];
