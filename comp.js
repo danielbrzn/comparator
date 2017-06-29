@@ -6,24 +6,32 @@ var sephScrape = require('./lib/sephScrape.js')
 var currConv = require('./lib/currencyconverter.js');
 var app = express();
 var tablesort = require('tablesort');
+var credentials = require('./credentials.js');
+var cookieSession = require('cookie-session');
 
 // set up handlebars view engine
 var handlebars = require('express3-handlebars')
 .create({ defaultLayout:'main' });
 app.engine('handlebars', handlebars.engine);
 app.set('view engine', 'handlebars');
+app.set('trust proxy', 1);
 
 app.use(express.static(__dirname + '/public'));
-
+app.use(cookieSession({
+	name: 'session',
+	keys: credentials.cookieSecret
+}));
 app.set('port', process.env.PORT || 3000);
 
 app.get('/', function(req, res){
 	res.render('home');
+
 });
 
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
+
 
 app.get('/about', function(req, res){
     res.render('about');
