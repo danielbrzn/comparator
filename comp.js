@@ -7,7 +7,7 @@ var currConv = require('./lib/currencyconverter.js');
 var app = express();
 var tablesort = require('tablesort');
 var credentials = require('./credentials.js');
-var cookieSession = require('cookie-session');
+var session = require('express-session');
 
 // set up handlebars view engine
 var handlebars = require('express3-handlebars')
@@ -17,13 +17,13 @@ app.set('view engine', 'handlebars');
 app.set('trust proxy', 1);
 
 app.use(express.static(__dirname + '/public'));
-app.use(cookieSession({
-	name: 'session',
-	keys: credentials.cookieSecret
-}));
+app.use(session({secret: credentials.cookieSecret}));
+
 app.set('port', process.env.PORT || 3000);
+var sess;
 
 app.get('/', function(req, res){
+	
 	res.render('home');
 
 });
@@ -39,14 +39,16 @@ app.get('/about', function(req, res){
 
 app.get('/search', function(req, res){
 	// dummy for csrf
+	sess = req.session;
 	res.render('search', { csrf: 'CSRF GOES HERE' });
 });
 
 app.post('/process', function(req, res){
+	sess = req.session;
 	//console.log('Form (from querystring): ' + req.query.form);
 	//console.log('Product Name (from visible form field): ' + req.body.name);
-	app.locals.prodName = req.body.name;
-
+	sess.prodName = req.body.name;
+	console.log(sess.prodName);
 	res.redirect(303, '/results');
 });
 
@@ -63,10 +65,11 @@ app.get('/temp', function(req, res) {
 });
 
 app.get('/results', function(req, res){
+	sess = req.session;
 	var arr = [[],[]]
 	var bestPrice, bestName;
-	req.session.prodName = app.locals.prodName;
-	Promise.all([amzScrape.getInfo(req.session.prodName), lazScrape.getInfo(req.session.prodName), sephScrape.getInfo(req.session.prodName)])
+	console.log(sess.prodName);
+	Promise.all([amzScrape.getInfo(sess.prodName), lazScrape.getInfo(sess.prodName), sephScrape.getInfo(sess.prodName)])
 	.then(results => {
 		//console.log(results)
 		arr[0] = results[0];
@@ -92,19 +95,19 @@ app.get('/results', function(req, res){
 				
 				if (i+1 == arr.length) {
 					console.log("bestPrice " + bestPrice);
-					req.session.arr = arr;
-					req.session.bestLink = bestLink;
-					req.session.bestName = bestName;
-					req.session.bestPrice = bestPrice;
+					sess.arr = arr;
+					sess.bestLink = bestLink;
+					sess.bestName = bestName;
+					sess.bestPrice = bestPrice;
 					res.render( 'results', {
-						BestLink: req.session.bestLink,
-						BestName: req.session.bestName, BestPrice: "$" + parseFloat(req.session.bestPrice).toFixed(2),
-						AmazLink: req.session.arr[0][2],
-						AmazName: req.session.arr[0][0], AmazPrice: "$" + parseFloat(req.session.arr[0][1]).toFixed(2),
-						LazLink: req.session.arr[1][2],
-						LazName: req.session.arr[1][0], LazPrice: "$" + parseFloat(req.session.arr[1][1]).toFixed(2),
-						SephLink: req.session.arr[2][2],
-						SephName: req.session.arr[2][0], SephPrice: "$" + parseFloat(req.session.arr[2][1]).toFixed(2)
+						BestLink: sess.bestLink,
+						BestName: sess.bestName, BestPrice: "$" + parseFloat(sess.bestPrice).toFixed(2),
+						AmazLink: sess.arr[0][2],
+						AmazName: sess.arr[0][0], AmazPrice: "$" + parseFloat(sess.arr[0][1]).toFixed(2),
+						LazLink: sess.arr[1][2],
+						LazName: sess.arr[1][0], LazPrice: "$" + parseFloat(sess.arr[1][1]).toFixed(2),
+						SephLink: sess.arr[2][2],
+						SephName: sess.arr[2][0], SephPrice: "$" + parseFloat(sess.arr[2][1]).toFixed(2)
 					});
 					
 				}
