@@ -17,12 +17,22 @@
 		font-size: 100%;
 		font: inherit;
 		vertical-align: baseline;
-		
+
 	
 		
 	}
 	
-	
+	html, body {
+		height: 99.5%; 
+	}
+
+	#wrapper { 
+	min-height: 70%;
+    min-height: -webkit-calc(100% - 186px);
+    min-height: -moz-calc(100% - 186px);
+    min-height: calc(100% - 186px); 
+	}
+
 	article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
 		display: block;
 	}
@@ -3584,10 +3594,7 @@
 			max-width: 60em;
 			margin: 0 auto;
 			text-align : center;
-			min-height: -webkit-calc(100vh - 25.45em);
-		min-height: -moz-calc(100vh - 25.45em);
-		min-height: calc(100vh - 25.45em);
-		position: relative;
+			
 		}
 
 			#main .inner header p {
