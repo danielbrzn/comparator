@@ -1,6 +1,6 @@
 var express = require('express');
 var bodyParser = require('body-parser');
-var searchController = require('./lib/searchController.js');
+var amzScrape = require('./lib/amzScrape.js');
 var lazScrape = require('./lib/lazScrape.js');
 var sephScrape = require('./lib/sephScrape.js')
 var currConv = require('./lib/currencyconverter.js');
@@ -45,12 +45,20 @@ app.get('/elements', function(req, res) {
 	res.render('elements');
 });
 
+app.get('/generic', function(req, res) {
+	res.render('generic');
+});
+
+app.get('/temp', function(req, res) {
+	res.render('temp');
+});
+
 app.get('/results', function(req, res){
 	var arr = [[],[]]
 	var bestPrice, bestName;
 
 	
-	Promise.all([searchController.getInfo(req.app.locals.prodName), lazScrape.getInfo(req.app.locals.prodName), sephScrape.getInfo(req.app.locals.prodName)])
+	Promise.all([amzScrape.getInfo(req.app.locals.prodName), lazScrape.getInfo(req.app.locals.prodName), sephScrape.getInfo(req.app.locals.prodName)])
 	.then(results => {
 		//console.log(results)
 		arr[0] = results[0];
