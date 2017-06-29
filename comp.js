@@ -46,6 +46,7 @@ app.post('/process', function(req, res){
 	//console.log('Form (from querystring): ' + req.query.form);
 	//console.log('Product Name (from visible form field): ' + req.body.name);
 	app.locals.prodName = req.body.name;
+	req.session.prodName = req.body.name;
 	res.redirect(303, '/results');
 });
 
@@ -92,15 +93,19 @@ app.get('/results', function(req, res){
 				
 				if (i+1 == arr.length) {
 					console.log("bestPrice " + bestPrice);
+					req.session.arr = arr;
+					req.session.bestLink = bestLink;
+					req.session.bestName = bestName;
+					req.session.bestPrice = bestPrice;
 					res.render( 'results', {
-						BestLink: bestLink,
-						BestName: bestName, BestPrice: "$" + parseFloat(bestPrice).toFixed(2),
-						AmazLink: arr[0][2],
-						AmazName: arr[0][0], AmazPrice: "$" + parseFloat(arr[0][1]).toFixed(2),
-						LazLink: arr[1][2],
-						LazName: arr[1][0], LazPrice: "$" + parseFloat(arr[1][1]).toFixed(2),
-						SephLink: arr[2][2],
-						SephName: arr[2][0], SephPrice: "$" + parseFloat(arr[2][1]).toFixed(2)
+						BestLink: req.session.bestLink,
+						BestName: req.session.bestName, BestPrice: "$" + parseFloat(req.session.bestPrice).toFixed(2),
+						AmazLink: req.session.arr[0][2],
+						AmazName: req.session.arr[0][0], AmazPrice: "$" + parseFloat(req.session.arr[0][1]).toFixed(2),
+						LazLink: req.session.arr[1][2],
+						LazName: req.session.arr[1][0], LazPrice: "$" + parseFloat(req.session.arr[1][1]).toFixed(2),
+						SephLink: req.session.arr[2][2],
+						SephName: req.session.arr[2][0], SephPrice: "$" + parseFloat(req.session.arr[2][1]).toFixed(2)
 					});
 					
 				}
