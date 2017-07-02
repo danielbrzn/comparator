@@ -21,23 +21,15 @@
         </tr>
     </thead>
     <tbody>
-    <tr>
-        <td>Lazada</td>
-        <td><a href= {{LazLink}}>{{LazName}}</a></td>
-        <td>{{LazPrice}}</td>
+    {{#each sites}}
+	<tr>
+		{{#if this}}
+        <td>{{this.source}}</td>
+        <td><a href= {{link}}>{{name}}</a></td>
+		<td>${{price}}</td>
+		{{/if}}
     </tr>
-    <tr>
-        <td>Amazon</td>
-        <td><a href= {{AmazLink}}>{{AmazName}}</a></td>
-        <td>{{AmazPrice}}</td>
-    </tr>
-    <tr>
-        <td>Sephora</td>
-        <td><a href= {{SephLink}}>{{SephName}}</a></td>
-        <td>{{SephPrice}}</td>
-    </tr>
-    </tbody>
-	
+	{{/each}}
 </table>
 
 <h4>Search again?</h4>
@@ -45,18 +37,17 @@
 <form class="form-horizontal" role="form"
 	action ="/process?form=search" method="POST">
 	<div class="form-group">
-		<h5>Entering in the brand and product name will help in getting
-		more helpful results!</h5>
+		<h5>Entering in the brand and product name will provide better results!</h5>
 		<div class="col-sm-4">
 			<input type="text" class="form-control"
 			id="prodName" name="name">
 		</div>
 	</div>
 	<div class="form-group">
-		<div class="col-sm-offset-2 col-sm-4">
+		
 			
 			<button type="submit" class="button alt big">Search</button>
-		</div>
+	
 	</div>
 </form>
 </div>

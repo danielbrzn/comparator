@@ -8,6 +8,7 @@ var app = express();
 var tablesort = require('tablesort');
 var credentials = require('./credentials.js');
 var session = require('express-session');
+var favicon = require('serve-favicon');
 
 // set up handlebars view engine
 var handlebars = require('express3-handlebars')
@@ -16,6 +17,7 @@ app.engine('handlebars', handlebars.engine);
 app.set('view engine', 'handlebars');
 app.set('trust proxy', 1);
 
+app.use(favicon(__dirname + '/public/img/favicon.ico'));
 app.use(express.static(__dirname + '/public'));
 app.use(session({secret: credentials.cookieSecret}));
 
@@ -68,46 +70,47 @@ app.get('/results', function(req, res){
 	sess = req.session;
 	var arr = [[],[]]
 	var bestPrice, bestName;
-	console.log(sess.prodName);
 	Promise.all([amzScrape.getInfo(sess.prodName), lazScrape.getInfo(sess.prodName), sephScrape.getInfo(sess.prodName)])
 	.then(results => {
-		//console.log(results)
 		arr[0] = results[0];
 		arr[1] = results[1];
 		arr[2] = results[2];
-		currConv.convert(arr[0][1])
+		currConv.convert(arr[0].price)
 		.then(
-		function (results) {
-			arr[0][1] = results;
-			bestPrice = arr[0][1];
-			bestName = arr[0][0];
-			bestLink = arr[0][2];
-			//console.log(bestName);
-			//console.log(bestPrice);
+		function (converted) {
+			arr[0].price = parseFloat(converted).toFixed(2);
+			// we return "objects" now so we can access the attributes instead of having to use array
+			bestPrice = arr[0].price;
+			bestName = arr[0].name;
+			bestLink = arr[0].link;
+			console.log(bestName);
+			console.log(bestPrice);
 			
+			for (i=0; i < arr.length; i++) {
+				// remove useless results
+				if (!arr[i])
+					arr.splice(i,i);
+			}
 			
 			for (i = 1; i < arr.length; i++) {
-				if (parseInt(bestPrice) > parseInt(arr[i][1]) && !arr[i][0].includes("Not Found")) {
-					bestPrice = arr[i][1];
-					bestName = arr[i][0];
-					bestLink = arr[i][2];
+				// update if price is lower than current best
+				if (!arr[i] && parseInt(bestPrice) > parseInt(arr[i].price)) {
+					bestPrice = arr[i].price;
+					bestName = arr[i].name;
+					bestLink = arr[i].link;
+					
 				}
 				
+				// render when at end of array
 				if (i+1 == arr.length) {
 					console.log("bestPrice " + bestPrice);
 					sess.arr = arr;
 					sess.bestLink = bestLink;
 					sess.bestName = bestName;
 					sess.bestPrice = bestPrice;
-					res.render( 'results', {
+					res.render( 'results', { sites: sess.arr,
 						BestLink: sess.bestLink,
 						BestName: sess.bestName, BestPrice: "$" + parseFloat(sess.bestPrice).toFixed(2),
-						AmazLink: sess.arr[0][2],
-						AmazName: sess.arr[0][0], AmazPrice: "$" + parseFloat(sess.arr[0][1]).toFixed(2),
-						LazLink: sess.arr[1][2],
-						LazName: sess.arr[1][0], LazPrice: "$" + parseFloat(sess.arr[1][1]).toFixed(2),
-						SephLink: sess.arr[2][2],
-						SephName: sess.arr[2][0], SephPrice: "$" + parseFloat(sess.arr[2][1]).toFixed(2)
 					});
 					
 				}
