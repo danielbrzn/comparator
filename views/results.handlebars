@@ -5,11 +5,22 @@
 </head>
 <body>
 <h1>Results Page</h1>
-<p>Here is the cheapest option: </p>
+<h2>Here is the cheapest option: </h2>
 
-<h2>Product Name: <a href= {{BestLink}}> {{BestName}}</a></h2>
-<h3>Price: {{BestPrice}}</h3>
-
+<h4>Product Data</h4>
+							<div class="table-wrapper">
+								<table class="alt">
+									
+									<tbody>
+										<tr>
+											<td><span class="image"><img src={{AmzImg}} alt="" /></span></td>
+											<td><a href= {{BestLink}}> {{BestName}}</a></td>
+											<td>{{BestPrice}}</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+							
 <table id='sort' class='sort'>
 	
     <thead>

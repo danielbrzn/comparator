@@ -83,6 +83,7 @@ app.get('/results', function(req, res){
 			bestPrice = arr[0].price;
 			bestName = arr[0].name;
 			bestLink = arr[0].link;
+			amzImg = arr[0].prodImg;
 			console.log(bestName);
 			console.log(bestPrice);
 			
@@ -94,7 +95,7 @@ app.get('/results', function(req, res){
 			
 			for (i = 1; i < arr.length; i++) {
 				// update if price is lower than current best
-				if (!arr[i] && parseInt(bestPrice) > parseInt(arr[i].price)) {
+				if (parseInt(bestPrice) > parseInt(arr[i].price)) {
 					bestPrice = arr[i].price;
 					bestName = arr[i].name;
 					bestLink = arr[i].link;
@@ -108,7 +109,9 @@ app.get('/results', function(req, res){
 					sess.bestLink = bestLink;
 					sess.bestName = bestName;
 					sess.bestPrice = bestPrice;
+					sess.amzImg = amzImg;
 					res.render( 'results', { sites: sess.arr,
+						AmzImg: sess.amzImg,
 						BestLink: sess.bestLink,
 						BestName: sess.bestName, BestPrice: "$" + parseFloat(sess.bestPrice).toFixed(2),
 					});
