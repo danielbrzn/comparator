@@ -9,6 +9,7 @@ var tablesort = require('tablesort');
 var credentials = require('./credentials.js');
 var session = require('express-session');
 var favicon = require('serve-favicon');
+var altAMZScrape = require('./lib/altamzScrape.js');
 
 // set up handlebars view engine
 var handlebars = require('express3-handlebars')
@@ -50,7 +51,7 @@ app.post('/process', function(req, res){
 	//console.log('Form (from querystring): ' + req.query.form);
 	//console.log('Product Name (from visible form field): ' + req.body.name);
 	sess.prodName = req.body.name;
-	console.log(sess.prodName);
+	//console.log(sess.prodName);
 	res.redirect(303, '/results');
 });
 
@@ -70,7 +71,7 @@ app.get('/results', function(req, res){
 	sess = req.session;
 	var arr = [[],[]]
 	var bestPrice, bestName;
-	Promise.all([amzScrape.getInfo(sess.prodName), lazScrape.getInfo(sess.prodName), sephScrape.getInfo(sess.prodName)])
+	Promise.all([altAMZScrape.getInfo(sess.prodName),  lazScrape.getInfo(sess.prodName), sephScrape.getInfo(sess.prodName)])
 	.then(results => {
 		arr[0] = results[0];
 		arr[1] = results[1];
@@ -84,6 +85,7 @@ app.get('/results', function(req, res){
 			bestName = arr[0].name;
 			bestLink = arr[0].link;
 			amzImg = arr[0].prodImg;
+			rating = arr[0].rating;
 			console.log(bestName);
 			console.log(bestPrice);
 			
@@ -110,7 +112,9 @@ app.get('/results', function(req, res){
 					sess.bestName = bestName;
 					sess.bestPrice = bestPrice;
 					sess.amzImg = amzImg;
+					sess.rating = rating;
 					res.render( 'results', { sites: sess.arr,
+						Rating: sess.rating,
 						AmzImg: sess.amzImg,
 						BestLink: sess.bestLink,
 						BestName: sess.bestName, BestPrice: "$" + parseFloat(sess.bestPrice).toFixed(2),

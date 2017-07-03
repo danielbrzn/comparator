@@ -2573,6 +2573,7 @@
 				border: solid 1px;
 				border-left-width: 0;
 				border-top-width: 0;
+				vertical-align:middle;
 			}
 
 				table.alt tbody tr td:first-child {
