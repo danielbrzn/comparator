@@ -50,7 +50,10 @@ app.post('/process', function(req, res){
 	sess = req.session;
 	//console.log('Form (from querystring): ' + req.query.form);
 	//console.log('Product Name (from visible form field): ' + req.body.name);
-	sess.prodName = req.body.name;
+	sess.prodName = req.body.prodName;
+	sess.prodPrice = req.body.prodPrice;
+	sess.userCurr = req.body.currency;
+	console.log(req.body.currency);
 	//console.log(sess.prodName);
 	res.redirect(303, '/results');
 });
@@ -76,7 +79,7 @@ app.get('/results', function(req, res){
 		arr[0] = results[0];
 		arr[1] = results[1];
 		arr[2] = results[2];
-		currConv.convert(arr[0].price)
+		currConv.convert("USD", sess.userCurr, arr[0].price)
 		.then(
 		function (converted) {
 			arr[0].price = parseFloat(converted).toFixed(2);
@@ -86,6 +89,7 @@ app.get('/results', function(req, res){
 			bestLink = arr[0].link;
 			amzImg = arr[0].prodImg;
 			rating = arr[0].rating;
+			
 			console.log(bestName);
 			console.log(bestPrice);
 			
@@ -113,9 +117,19 @@ app.get('/results', function(req, res){
 					sess.bestPrice = bestPrice;
 					sess.amzImg = amzImg;
 					sess.rating = rating;
+					sess.savings = sess.bestPrice < sess.prodPrice;
+					sess.priceDiff = Math.abs(parseFloat(sess.prodPrice - sess.bestPrice).toFixed(2));
+					switch (sess.userCurr) {
+						case "SGD" : sess.curSymbol = "$";
+						break;
+						case "JPY" : sess.curSymbol = "¥‎"
+						
+					}
 					res.render( 'results', { sites: sess.arr,
+						savings: sess.savings,
 						Rating: sess.rating,
 						AmzImg: sess.amzImg,
+						PriceDiff: sess.priceDiff,
 						BestLink: sess.bestLink,
 						BestName: sess.bestName, BestPrice: "$" + parseFloat(sess.bestPrice).toFixed(2),
 					});

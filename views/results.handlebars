@@ -17,6 +17,12 @@
 											<td><a href= {{BestLink}}> {{BestName}}</a></td>
 											<td>{{BestPrice}}</td>
 											<td>{{Rating}}</td>
+											{{#if savings}}
+											<td>You save ${{PriceDiff}}</td>
+											{{/if}}
+											{{#unless savings}}
+											<td>Buy it in the store!</td>
+											{{/unless}}
 										</tr>
 									</tbody>
 								</table>
@@ -48,12 +54,24 @@
 <div class="content">
 <form class="form-horizontal" role="form"
 	action ="/process?form=search" method="POST">
-	<div class="form-group">
-		<h5>Entering in the brand and product name will provide better results!</h5>
-		<div class="col-sm-4">
-			<input type="text" class="form-control"
-			id="prodName" name="name">
-		</div>
+	<div class="row uniform 50%">
+									<div class="8u 12u$(xsmall)">
+										<input type="text" name="prodName" id="prodName" value="" placeholder="Product Name" />
+									</div>
+									
+									<div class="2u 12u$(xsmall)">
+										<input type="text" name="prodPrice" id="prodPrice" value="" placeholder="Price" />
+									</div>
+									
+									<div class="2u$ 12u$(xsmall)">
+										<div class="select-wrapper">
+											<select name="currency" id="currency">
+												<option value="">- Currency -</option>
+												<option value="SGD">SGD</option>
+												<option value="JPY">JPY</option>
+											</select>
+										</div>
+									</div>
 	</div>
 	<div class="form-group">
 		

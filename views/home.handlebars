@@ -3,12 +3,31 @@
 <form class="form-horizontal" role="form"
 	action ="/process?form=search" method="POST">
 	<!-- input type="hidden" name="_csrf" value="{{csrf}}" -->
-	<div class="form-group">
-		<label for="prodName" class="col-sm-2 control-label">Product Name</label>
-		<div class="col-sm-4">
+	<!-- div class="form-group" -->
+		<!-- label for="prodName" class="col-sm-2 control-label">Product Name</label -->
+		<!--div class="col-sm-4">
 			<input type="text" class="form-control"
 			id="prodName" name="name">
-		</div>
+			<input type="email" name="email" id="email" value="" placeholder="Email" />
+		</div -->
+		
+		<div class="row uniform 50%">
+									<div class="8u 12u$(xsmall)">
+										<input type="text" name="prodName" id="prodName" value="" placeholder="Product Name" />
+									</div>
+									
+									<div class="2u 12u$(xsmall)">
+										<input type="text" name="prodPrice" id="prodPrice" value="" placeholder="Price" />
+									</div>
+									
+									<div class="2u$ 12u$(xsmall)">
+										<div class="select-wrapper">
+											<select name="currency" id="currency">
+												<option value="SGD">SGD</option>
+												<option value="JPY">JPY</option>
+											</select>
+										</div>
+									</div>
 	</div>
 	<div class="form-group">
 		<div class="col-sm-offset-2 col-sm-4">
