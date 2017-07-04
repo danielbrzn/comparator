@@ -20,7 +20,11 @@ app.set('trust proxy', 1);
 
 app.use(favicon(__dirname + '/public/img/favicon.ico'));
 app.use(express.static(__dirname + '/public'));
-app.use(session({secret: credentials.cookieSecret}));
+app.use(session(
+	{ secret: credentials.cookieSecret,
+	  resave: false,
+	  saveUninitialized: false
+	}));
 
 app.set('port', process.env.PORT || 3000);
 var sess;
@@ -84,12 +88,14 @@ app.get('/results', function(req, res){
 		function (converted) {
 			arr[0].price = parseFloat(converted).toFixed(2);
 			// we return "objects" now so we can access the attributes instead of having to use array
+			bestSite = arr[0].source;
 			bestPrice = arr[0].price;
 			bestName = arr[0].name;
 			bestLink = arr[0].link;
 			amzImg = arr[0].prodImg;
 			rating = arr[0].rating;
 			
+			console.log(arr[2].name);
 			console.log(bestName);
 			console.log(bestPrice);
 			
@@ -102,6 +108,7 @@ app.get('/results', function(req, res){
 			for (i = 1; i < arr.length; i++) {
 				// update if price is lower than current best
 				if (parseInt(bestPrice) > parseInt(arr[i].price)) {
+					bestSite = arr[i].source;
 					bestPrice = arr[i].price;
 					bestName = arr[i].name;
 					bestLink = arr[i].link;
@@ -110,14 +117,14 @@ app.get('/results', function(req, res){
 				
 				// render when at end of array
 				if (i+1 == arr.length) {
-					console.log("bestPrice " + bestPrice);
 					sess.arr = arr;
+					sess.bestSite = bestSite;
 					sess.bestLink = bestLink;
 					sess.bestName = bestName;
 					sess.bestPrice = bestPrice;
 					sess.amzImg = amzImg;
 					sess.rating = rating;
-					sess.savings = sess.bestPrice < sess.prodPrice;
+					sess.savings = parseFloat(sess.bestPrice) < parseFloat(sess.prodPrice);
 					sess.priceDiff = Math.abs(parseFloat(sess.prodPrice - sess.bestPrice).toFixed(2));
 					switch (sess.userCurr) {
 						case "SGD" : sess.curSymbol = "$";
@@ -130,6 +137,7 @@ app.get('/results', function(req, res){
 						Rating: sess.rating,
 						AmzImg: sess.amzImg,
 						PriceDiff: sess.priceDiff,
+						BestSite: sess.bestSite,
 						BestLink: sess.bestLink,
 						BestName: sess.bestName, BestPrice: "$" + parseFloat(sess.bestPrice).toFixed(2),
 					});
