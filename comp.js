@@ -127,19 +127,22 @@ app.get('/results', function(req, res){
 					sess.savings = parseFloat(sess.bestPrice) < parseFloat(sess.prodPrice);
 					sess.priceDiff = Math.abs(parseFloat(sess.prodPrice - sess.bestPrice).toFixed(2));
 					switch (sess.userCurr) {
-						case "SGD" : sess.curSymbol = "$";
+						case "SGD" : sess.currSymbol = "$";
 						break;
-						case "JPY" : sess.curSymbol = "¥‎"
+						case "JPY" : sess.currSymbol = "¥‎"
 						
 					}
+					console.log(sess.currSymbol);
+					
 					res.render( 'results', { sites: sess.arr,
 						savings: sess.savings,
 						Rating: sess.rating,
 						AmzImg: sess.amzImg,
+						CurrSymbol: sess.currSymbol,
 						PriceDiff: sess.priceDiff,
 						BestSite: sess.bestSite,
 						BestLink: sess.bestLink,
-						BestName: sess.bestName, BestPrice: "$" + parseFloat(sess.bestPrice).toFixed(2),
+						BestName: sess.bestName, BestPrice: parseFloat(sess.bestPrice).toFixed(2),
 					});
 					
 				}

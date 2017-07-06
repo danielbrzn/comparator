@@ -15,10 +15,10 @@
 										<tr>
 											<td><span class="image"><img src={{AmzImg}} alt="" /></span></td>
 											<td><a href= {{BestLink}}> {{BestName}}</a></td>
-											<td>{{BestPrice}}</td>
+											<td>{{CurrSymbol}}{{BestPrice}}</td>
 											<td>{{Rating}}</td>
 											{{#if savings}}
-											<td>You save ${{PriceDiff}} by purchasing this item on {{BestSite}}!</td>
+											<td>You save {{CurrSymbol}}{{PriceDiff}} by purchasing this item on {{BestSite}}!</td>
 											{{/if}}
 											{{#unless savings}}
 											<td>Buy it in the store!</td>
@@ -44,7 +44,7 @@
 		{{#if this}}
         <td>{{this.source}}</td>
         <td><a href= {{link}}>{{name}}</a></td>
-		<td>${{price}}</td>
+		<td>{{../../CurrSymbol}}{{price}}</td>
 		{{/if}}
     </tr>
 	{{/each}}
@@ -66,7 +66,6 @@
 									<div class="2u$ 12u$(xsmall)">
 										<div class="select-wrapper">
 											<select name="currency" id="currency">
-												<option value="">- Currency -</option>
 												<option value="SGD">SGD</option>
 												<option value="JPY">JPY</option>
 											</select>
