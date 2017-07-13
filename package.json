@@ -1,5 +1,5 @@
 {
-  "name": "comp",
+  "name": "priceComp",
   "dependencies": {
     "amazon-product-api": "^0.4.3",
     "body-parser": "^1.17.2",
@@ -26,5 +26,8 @@
   "devDependencies": {
     "chai": "^4.0.0",
     "mocha": "^3.4.2"
+  }
+  "engines": {
+    "node": "6.11.1"
   }
 }
