@@ -83,6 +83,7 @@ app.get('/results', function(req, res){
 		arr[0] = results[0];
 		arr[1] = results[1];
 		arr[2] = results[2];
+		// add conversion for other websites too, not just AMZ
 		currConv.convert("USD", sess.userCurr, arr[0].price)
 		.then(
 		function (converted) {
