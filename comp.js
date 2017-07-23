@@ -2,7 +2,7 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var amzScrape = require('./lib/amzScrape.js');
 var lazScrape = require('./lib/lazScrape.js');
-var sephScrape = require('./lib/sephScrape.js')
+var sephScrape = require('./lib/sephScrape.js');
 var currConv = require('./lib/currencyconverter.js');
 var fixer = require("node-fixer-io");
 var app = express();
@@ -12,7 +12,9 @@ var session = require('express-session');
 var favicon = require('serve-favicon');
 var altAMZScrape = require('./lib/altamzScrape.js');
 var fixer = require("node-fixer-io");
+var nodemailer = require('nodemailer');
 
+var VALID_EMAIL_REGEX = "/\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i";
 // set up handlebars view engine
 var handlebars = require('express3-handlebars')
 .create({ defaultLayout:'main' });
@@ -30,6 +32,15 @@ app.use(session(
 
 app.set('port', process.env.PORT || 3000);
 var sess;
+
+var mailTransport = nodemailer.createTransport({
+  service: 'SendGrid',
+  auth: {
+    user: credentials.email.user,
+    pass: credentials.email.pass
+  }
+});
+
 
 app.get('/', function(req, res){
 	
@@ -64,6 +75,43 @@ app.post('/process', function(req, res){
 	res.redirect(303, '/results');
 });
 
+app.post('/saveresult', function(req, res){
+	sess = req.session;
+	sess.email = req.body.email;
+	console.log(req.body.email);
+	//console.log(sess.prodName);
+	
+	// input validation
+	//if (!sess.email.match(VALID_EMAIL_REGEX))
+	//	return res.next(new Error('Invalid email address.'));
+	
+	res.render('email/succ-results',
+	 { sites: sess.arr,
+						savings: sess.savings,
+						Rating: sess.rating,
+						AmzImg: sess.amzImg,
+						CurrSymbol: sess.currSymbol,
+						PriceDiff: sess.priceDiff,
+						BestSite: sess.bestSite,
+						BestLink: sess.bestLink,
+						BestName: sess.bestName, BestPrice: parseFloat(sess.bestPrice).toFixed(2),
+					}, function (err, html) {
+						if( err ) console.log('error in email template');
+						mailTransport.sendMail({
+							from: '"Price Comparator" <donotreply@pricecomp.com>',
+							to: sess.email,
+							subject: 'Your Comparison Results are Here!',
+							html: html,
+							generateTextFromHtml: true
+					}, function(err) {
+						if (err) console.error("Unable to send email: " + err.stack);
+					});
+				}
+	);
+	
+	res.render('success');
+});
+
 app.get('/elements', function(req, res) {
 	res.render('elements');
 });
@@ -74,6 +122,10 @@ app.get('/generic', function(req, res) {
 
 app.get('/temp', function(req, res) {
 	res.render('temp');
+});
+
+app.get('/success', function(req, res) {
+	res.render('success');
 });
 
 app.get('/results', function(req, res){
@@ -112,8 +164,6 @@ app.get('/results', function(req, res){
 				if (!sess.userCurr.includes("SGD"))
 					arr[i].price = parseFloat(fixer.convert("SGD", sess.userCurr, arr[i].price)).toFixed(2);
 			}
-			
-			console.log("test " + parseFloat("$‎31776.17"));
 			
 			// best price updating
 			for (i = 1; i < arr.length; i++) {
