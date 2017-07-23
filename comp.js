@@ -4,12 +4,14 @@ var amzScrape = require('./lib/amzScrape.js');
 var lazScrape = require('./lib/lazScrape.js');
 var sephScrape = require('./lib/sephScrape.js')
 var currConv = require('./lib/currencyconverter.js');
+var fixer = require("node-fixer-io");
 var app = express();
 var tablesort = require('tablesort');
 var credentials = require('./credentials.js');
 var session = require('express-session');
 var favicon = require('serve-favicon');
 var altAMZScrape = require('./lib/altamzScrape.js');
+var fixer = require("node-fixer-io");
 
 // set up handlebars view engine
 var handlebars = require('express3-handlebars')
@@ -96,16 +98,24 @@ app.get('/results', function(req, res){
 			amzImg = arr[0].prodImg;
 			rating = arr[0].rating;
 			
-			console.log(arr[2].name);
-			console.log(bestName);
-			console.log(bestPrice);
+			//console.log(arr[2].name);
+			//console.log(bestName);
+			//console.log(bestPrice);
 			
+			// remove useless results
 			for (i=0; i < arr.length; i++) {
-				// remove useless results
 				if (!arr[i])
-					arr.splice(i,i);
+					arr.splice(i,1);
 			}
 			
+			for (i=1; i<arr.length; i++) {
+				if (!sess.userCurr.includes("SGD"))
+					arr[i].price = parseFloat(fixer.convert("SGD", sess.userCurr, arr[i].price)).toFixed(2);
+			}
+			
+			console.log("test " + parseFloat("$‎31776.17"));
+			
+			// best price updating
 			for (i = 1; i < arr.length; i++) {
 				// update if price is lower than current best
 				if (parseInt(bestPrice) > parseInt(arr[i].price)) {
@@ -130,7 +140,7 @@ app.get('/results', function(req, res){
 					switch (sess.userCurr) {
 						case "SGD" : sess.currSymbol = "$";
 						break;
-						case "JPY" : sess.currSymbol = "¥‎"
+						case "JPY" : sess.currSymbol = "¥"
 						
 					}
 					console.log(sess.currSymbol);
