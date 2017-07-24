@@ -86,11 +86,12 @@ app.post('/saveresult', function(req, res){
 	//	return res.next(new Error('Invalid email address.'));
 	
 	res.render('email/succ-results',
-	 { sites: sess.arr,
+	 { layout: null, sites: sess.arr,
 						savings: sess.savings,
 						Rating: sess.rating,
 						AmzImg: sess.amzImg,
 						CurrSymbol: sess.currSymbol,
+						UserCurr: sess.userCurr,
 						PriceDiff: sess.priceDiff,
 						BestSite: sess.bestSite,
 						BestLink: sess.bestLink,
@@ -129,6 +130,7 @@ app.get('/success', function(req, res) {
 });
 
 app.get('/results', function(req, res){
+	console.log(fixer.allowedRates());
 	sess = req.session;
 	var arr = [[],[]]
 	var bestPrice, bestName;
@@ -188,10 +190,33 @@ app.get('/results', function(req, res){
 					sess.savings = parseFloat(sess.bestPrice) < parseFloat(sess.prodPrice);
 					sess.priceDiff = Math.abs(parseFloat(sess.prodPrice - sess.bestPrice).toFixed(2));
 					switch (sess.userCurr) {
-						case "SGD" : sess.currSymbol = "$";
+						case "USD" :
+						case "AUD" :
+						case "NZD" :
+						case "HKD" :
+ 						case "SGD" : sess.currSymbol = "$";
 						break;
-						case "JPY" : sess.currSymbol = "¥"
 						
+						case "EUR" : sess.currSymbol = "€";
+						break;
+						
+						case "GBP" : sess.currSymbol = "£";
+						break;
+						
+						case "KRW" : sess.currSymbol = "₩";
+						break;
+						
+						case "PHP" : sess.currSymbol = "₱";
+						break;
+						
+						case "MYR" : sess.currSymbol = "RM";
+						break;
+						
+						case "CNY" :
+						case "JPY" : sess.currSymbol = "¥"
+						break;
+						
+						default: sess.currSymbol = "$";
 					}
 					console.log(sess.currSymbol);
 					

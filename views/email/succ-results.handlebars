@@ -205,56 +205,62 @@ END MOBILE TARGETING
 <![endif]-->
 	</head>
 	<body>
-		<table border-collapse= "separate">
-			<tr border= "solid 1px" border-left-width= "0" border-top-width= "0" vertical-align= "middle">
-				<td border= "solid 1px" border-left-width= "0" border-top-width= "0" vertical-align= "middle">
-					<table border= "solid 1px" border-left-width= "0" border-top-width= "0" vertical-align= "middle">
-						<h4>Product Data</h4>
-						<div class="table-wrapper">
-							<table class="alt">
+		<h1> Prices are in given in {{UserCurr}} </h1>
 
-								<tbody>
-									<tr>
-										<td border= "solid 1px" vertical-align= "middle"><span class="image"><img src={{AmzImg}} alt="" /></span></td>
-										<td border= "solid 1px" border-left-width= "1" border-top-width= "1" vertical-align= "middle"><a href= {{BestLink}}> {{BestName}}</a></td>
-										<td border= "solid 1px" border-left-width= "1" border-top-width= "1" vertical-align= "middle">{{CurrSymbol}}{{BestPrice}}</td>
-										<td border= "solid 1px" border-left-width= "1" border-top-width= "1" vertical-align= "middle">{{Rating}}</td>
+							<div class="table-wrapper">
+								<table style="width:100%" border= "1px solid black">
+									<thead>
+										<tr>
+											<th>Image</th>
+											<th>Product Name</th>
+											<th>Price</th>
+											<th>Rating</th>
+											<th>Advice</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr align= "center">
+											<td><span class="image"><img src={{AmzImg}} alt="" /></span></td>
+											<td><a href= {{BestLink}}> {{BestName}}</a></td>
+											<td>{{CurrSymbol}}{{BestPrice}}</td>
+											<td>{{Rating}}</td>
 											{{#if savings}}
-										<td border= "solid 1px" border-left-width= "0" border-top-width= "0" vertical-align= "middle">You save {{CurrSymbol}}{{PriceDiff}} by purchasing this item on {{BestSite}}!</td>
+											<td>You save {{CurrSymbol}}{{PriceDiff}} by purchasing this item on {{BestSite}}!</td>
 											{{/if}}
 											{{#unless savings}}
-										<td border= "solid 1px" border-left-width= "0" border-top-width= "0" vertical-align= "middle">Buy it in the store!</td>
+											<td>Buy it in the store!</td>
 											{{/unless}}
-									</tr>
-								</tbody>
-							</table>
-						</div>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+							
+							<hr style="border: transparent; padding: 1px;">
+							
+<table id='sort' class='sort' style="width:100%" border= "1px solid black">
+	
 
-						<table id='sort' class='sort'>
+    <thead>
+        <tr>
 
-							<thead>
-								<tr>
-
-									<th border= "solid 1px" border-left-width= "0" border-top-width= "0" vertical-align= "middle">Website</th>
-									<th border= "solid 1px" border-left-width= "0" border-top-width= "0" vertical-align= "middle">Product Name</th>
-									<th border= "solid 1px" border-left-width= "0" border-top-width= "0" vertical-align= "middle" data-sort-default data-sort-method="number" >Price</th>
-								</tr>
-							</thead>
-							<tbody>
+            <th>Website</th>
+            <th>Product Name</th>
+            <th data-sort-default data-sort-method="number" >Price</th>
+        </tr>
+    </thead>
+    <tbody>
     {{#each sites}}
-								<tr>
+	<tr align= "center">
 		{{#if this}}
-									<td border= "solid 1px" border-left-width= "0" border-top-width= "0" vertical-align= "middle">{{this.source}}</td>
-									<td border= "solid 1px" border-left-width= "0" border-top-width= "0" vertical-align= "middle"><a href= {{link}}>{{name}}</a></td>
-									<td border= "solid 1px" border-left-width= "0" border-top-width= "0" vertical-align= "middle">{{../../CurrSymbol}}{{price}}</td>
+        <td>{{this.source}}</td>
+        <td><a href= {{link}}>{{name}}</a></td>
+		<td>{{../../CurrSymbol}}{{price}}</td>
 		{{/if}}
-								</tr>
+    </tr>
 	{{/each}}
-							</table>
-						</table>
-					</td>
-				</tr>
-			</table>
+</table>
+
+	<h2> Thank you for using <bold><a href= "http://pricecomp.herokuapp.com/">Price Comparator </a></bold> </h2>
 		</body>
 	</html>
 	

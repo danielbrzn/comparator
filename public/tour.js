@@ -1,12 +1,14 @@
 // Define the tour!
 var tour = {
     id: "hello-hopscotch",
+	
     steps: [
         {
             title: "Search Query",
             content: "Please enter the product you would like to search for here (please be as detailed as possible!)",
             target: "prodName",
-            placement: "bottom"
+            placement: "bottom",
+			showCloseButton: "true"
         },
         {
             title: "Price of your item",

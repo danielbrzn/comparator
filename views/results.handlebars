@@ -4,13 +4,19 @@
     <script src='tablesort.number.min.js'></script>
 </head>
 <body>
-<h1>Results Page</h1>
-<h2>Here is the cheapest option: </h2>
+<h1>Here is the cheapest option: </h1>
 
-<h4>Product Data</h4>
 							<div class="table-wrapper">
 								<table class="alt">
-									
+									<thead>
+										<tr>
+											<th></th>
+											<th>Product Name</th>
+											<th>Price</th>
+											<th>Rating</th>
+											<th>Advice</th>
+										</tr>
+									</thead>
 									<tbody>
 										<tr>
 											<td><span class="image"><img src={{AmzImg}} alt="" /></span></td>
@@ -50,7 +56,7 @@
 	{{/each}}
 </table>
 
-<h4>Save Results</h4>
+<h3>Get your results emailed!</h3>
 <div class="content">
 <form class="form-horizontal" role="form"
 	action ="/saveresult" method="POST">
@@ -65,7 +71,7 @@
 </form>
 </div>
 
-<h4>Search again?</h4>
+<h3>Didn't find what you're looking for?</h3>
 <div class="content">
 <form class="form-horizontal" role="form"
 	action ="/process?form=search" method="POST">
@@ -82,6 +88,16 @@
 										<div class="select-wrapper">
 											<select name="currency" id="currency">
 												<option value="SGD">SGD</option>
+												<option value="USD">USD</option>
+												<option value="MYR">MYR</option>
+												<option value="THB">THB</option>
+												<option value="PHP">PHP</option>
+												<option value="CNY">CNY</option>
+												<option value="HKD">HKD</option>
+												<option value="KRW">KRW</option>
+												<option value="EUR">EUR</option>
+												<option value="GBP">GBP</option>
+												<option value="NZD">NZD</option>
 												<option value="JPY">JPY</option>
 											</select>
 										</div>
